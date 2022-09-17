@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+
+{% block page_title %}
+  Update Profile
+{% endblock page_title %}
+
+{% block content %}
+
+    <div>
+      {% include 'mixins/form.html' with form=form cta="Update Profile" %}
+    </div>
+    <div class="text-center py-5">
+        <a class="bg-orange-400 hover:bg-orange-600 text-white font-bold mt-2 py-2 px-4 rounded w-full" href="{% url 'users:password' %}">Change Password</a>
+    </div>
+{% endblock content %}

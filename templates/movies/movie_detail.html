@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+  {{movie.title}}
+{% endblock page_title %}
+
+{% block content %}
+<div class="container mx-auto flex flex-col items-center bg-gray-200 my-20 rounded-lg p-20">
+<div class="flex flex-col items-center bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+  <h2 class="font-bold text-xl mb-8">{{movie.title}}</h2>
+  <div class="flex items-center  mb-5">
+    <div class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">{{movie.year}}</div>
+    <a href="{% url 'categories:category' movie.category.pk %}"><div class="bg-orange-400 text-white px-3 shadow-md py-1 rounded-full mx-4">{{movie.category}}</div></a>
+    <div class="">
+      <i class="fa-star fa-solid text-yellow-500 -mr-1"></i>
+      <span class="font-bold text-gray-700">{{movie.rating}}</span>
+    </div>
+  </div>
+  <div class="mb-2">Director:
+    <div class="inline-block bg-white shadow-md rounded-full px-3 py-1 text-sm font-semibold text-gray-700">{{movie.director}}</div>
+  </div>
+  <div class="mb-5">Cast: {% for i in movie.cast.all %} 
+    <div class="inline-block bg-white shadow-md rounded-full px-3 py-1 text-sm font-semibold text-gray-700">{{i}}</div> {% endfor %}
+  </div>
+  <div class="flex">
+    {% if user.is_authenticated %}
+      <a class="bg-blue-400 hover:bg-blue-600 text-white font-bold mt-4 py-2 px-4 rounded" href="{% url 'movies:update' movie.pk %}">Edit Movie</a>
+      {% include "mixins/fav_button.html" with obj=movie kind='movie' %}
+    {% endif %}
+  </div>
+</div>
+
+  <div class="container border mx-auto items-center bg-blue-100 my-10 rounded-lg p-5">
+    <div class="flex justify-between mb-5">
+      <h3 class="text-2xl text-gray-600">Reviews</h3>
+      
+    {% if user.is_authenticated %}
+      <div class="">
+        <a class="bg-teal-400 hover:bg-teal-600 text-white font-bold mt-4 py-2 px-4 rounded" href="{% url 'reviews:create-review' %}?movie={{movie.pk}}">Create a review</a>
+      </div>
+    {% endif %}
+    </div>
+  
+  
+    <div>
+      {% if page_obj.object_list %}
+
+        <!--Review Rows-->
+        {% for review in page_obj.object_list %}
+          <div class="pt-2 pb-2 px-3 bg-blue-200 rounded-lg mb-3">
+            <p class=" break-all max-w-7xl text-lg">{{review.text}}</p>
+            
+            <div class="flex justify-between">
+              <div class="pt-5 text-gray-700">
+                <i class="fa-star fa-solid text-yellow-600 -mr-1"></i>
+                <span class="font-bold text-gray-700 mr-5">{{review.rating}}</span>
+                <span >{{review.created_by.first_name}}</span>
+                <span>{{review.updated_at}}</span>
+              </div>
+              <div class="flex justify-end">
+                {% if user == review.created_by %}
+                  <div><a class=" bg-red-400 hover:bg-red-600 text-white text-sm p-1 font-bold rounded" href="{% url 'reviews:delete-review' %}?review={{review.pk}}&movie={{movie.pk}}">delete</a></div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+        <div class="mt-2 flex justify-center">
+      <div>
+      {% if page_obj.has_previous %}
+            <a class="bg-blue-400 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded" href="?page={{page_obj.previous_page_number}}">Previous</a>
+        {% endif %}
+    
+        <span class="font-bold text-blue-600">
+        Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+        </span>
+    
+        {% if page_obj.has_next  %}
+            <a class="bg-blue-400 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded" href="?page={{page_obj.next_page_number}}">Next</a>
+        {% endif %}
+      </div>
+    </div>
+
+
+      
+      {% else %}
+        <h1 class="text-center text-lg text-gray-600">There is no review</h1>
+      {% endif %}
+    </div>
+  </div>
+
+
+
+
+  
+</div>
+
+
+
+{% endblock content %}

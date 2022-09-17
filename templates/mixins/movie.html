@@ -1,0 +1,9 @@
+<div class="h-48 rounded shadow-lg p-2  font-bold hover:shadow-xl">
+  <h3 class="mt-3 text-gray-700 text-base mb-2"><a href="{% url 'movies:movie' movie.pk %}">{{movie.title}}</a></h3>
+  <h5 class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{movie.year}}</h5>
+  <a href="{% url 'categories:category' movie.category.pk %}"><div class="inline-block bg-orange-400 text-white px-3 shadow-md py-1 rounded-full">{{movie.category}}</div></a>
+  <div class="inline-block bg-gray-100 text-white px-3 py-1 rounded-full">
+    <i class="fa-star fa-solid text-yellow-500  -mr-1"></i>
+    <span class="font-bold text-gray-700">{{movie.rating|add:"0"}}</span>
+  </div>
+</div>
